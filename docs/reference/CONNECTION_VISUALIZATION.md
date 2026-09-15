@@ -1,4 +1,4 @@
-# Egosoft Connection Visualization Reference v0.2
+# Egosoft Connection Visualization Reference v0.3
 
 ## Purpose
 
@@ -6,7 +6,7 @@ X4艦の設計で必要なのは、装備モデルの精密Bounding Boxを毎回
 
 Egosoft Blender Mod ToolsはConnection tagに応じてViewportへbox / cylinder等のVisualizationを描画する。
 
-このVisualizationをX4艦設計のClearance Authorityとして優先する。
+このVisualizationをX4艦設計の**Clearance Authority**として優先する。
 
 ## Authority rule
 
@@ -125,6 +125,36 @@ Can a ship approach / depart the dock without the hull blocking the reserved cor
 ```
 
 It is not intended to reproduce every visual protrusion of the final equipment model.
+
+### What Visualization does NOT prove
+
+Visualization PASSだけでは、次は証明できない。
+
+```text
+component Connection ↔ ship macro binding
+binding先macroのattachment connection
+Connection name / ID persistence
+custom turret IK / articulation
+muzzle / firing axis
+Dockの実runtime behavior
+animation behavior
+save compatibility
+X4 runtime interpretation
+```
+
+したがって:
+
+```text
+Visualization PASS
+    ↓
+Binding / Identity validation
+    ↓
+Export / Package validation
+    ↓
+X4 Runtime Corroboration
+```
+
+まで別Gateとして扱う。
 
 ---
 
