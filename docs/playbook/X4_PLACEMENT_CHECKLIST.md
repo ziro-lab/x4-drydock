@@ -1,4 +1,4 @@
-# X4 Ship Placement Checklist v0.1
+# X4 Ship Placement Checklist v0.2
 
 このチェックリストは **Blockout → X4機能配置 → Layout Freeze** のGateとして使う。
 
@@ -45,6 +45,20 @@
 - [ ] `countermeasures`
 - [ ] `dynamicroom`
 
+### Connection identity / binding
+
+Connectionを置いただけで機能成立とみなさない。
+
+- [ ] Connection nameが艦component内で一意
+- [ ] tag / size / standard・advanced等が現行データと整合
+- [ ] groupを使うConnectionは、groupの意味が意図した機能と一致
+- [ ] cockpit / dock / storage等、macro bindingが必要なものはship macro側にも対応bindingがある
+- [ ] ship macroの`connection ref`がcomponent側の実在Connectionを指す
+- [ ] binding先macroと、そのattachment connectionが実在する
+- [ ] 既存saveや公開版で使ったConnection名は、理由なくrenameしない
+
+古いMOD制作ツールにはgroupや固定武器の制約に関する有用な事例があるが、9.xのAuthorityにはしない。**現行X4データ・現行Egosoft Tools・動作済み現行例で再確認する。**
+
 ---
 
 ## D. Engine
@@ -53,6 +67,7 @@
 - [ ] Sizeが正しい
 - [ ] Standard / Advancedが正しい
 - [ ] 必要なgroupへ所属
+- [ ] group構成が他surface elementとの意図した保護・機能関係に合う
 - [ ] Engine ↔ Hull clearance PASS
 - [ ] Engine ↔ Engine clearance PASS
 - [ ] 後方方向が自然
@@ -66,6 +81,7 @@
 - [ ] Sizeが正しい
 - [ ] Standard / Advancedが正しい
 - [ ] Group対応が正しい
+- [ ] groupが何を保護する想定かを現行動作例で確認
 - [ ] Clearance PASS
 
 ---
@@ -78,6 +94,8 @@
 - [ ] 射撃方向
 - [ ] 左右対称（必要時）
 - [ ] 船体による過度な射線遮蔽なし
+- [ ] group有無を現行の動作済み同種艦と照合
+- [ ] Connection名・tagが選択する武器macroと整合
 
 ### Turret
 
@@ -89,6 +107,13 @@
 - [ ] Turret ↔ Turret clearance PASS
 - [ ] 主要射界が成立
 
+Custom articulated turretを作る場合:
+
+- [ ] socket → yaw → pitch等の親子関係が意図通り
+- [ ] yaw / pitchのIK・回転制約が正しい
+- [ ] muzzle / laser connectionが動くpitch側へ追従
+- [ ] offline geometry一致だけでruntime PASSにしない
+
 ---
 
 ## G. Dock
@@ -99,6 +124,8 @@
 - [ ] `dockingbay / shipstorage`
 - [ ] `storage`
 - [ ] `dock_xs`（必要時）
+- [ ] Dock Connectionとship macro側のdock macro bindingが対応
+- [ ] binding先dock macroのattachment connectionが正しい
 - [ ] Dock進入方向
 - [ ] Approach corridor PASS
 - [ ] Departure corridor PASS
@@ -113,6 +140,11 @@ Dock Doorを使う場合:
 - [ ] open時PASS
 - [ ] closing中PASS
 
+Custom dock / traffic pathを使う場合:
+
+- [ ] waypoint / pathが必要か現行バニラ例で確認
+- [ ] 古いwaypoint仕様をそのままコピーせず、current dataでリンク関係を再確認
+
 ---
 
 ## H. Ship Storage
@@ -123,6 +155,7 @@ Dockとは別項目として確認。
 - [ ] XS storage（必要時）
 - [ ] S storage（必要時）
 - [ ] M storage（必要時）
+- [ ] Ship Storage Connectionとship macro側のstorage macro bindingが対応
 - [ ] Dock / Hangarとの位置関係が自然
 
 Ship Storageは空母専用機能ではない。
@@ -151,6 +184,7 @@ Ship Storageは空母専用機能ではない。
 - [ ] 出口clearance
 - [ ] 複数tubeの経路が不自然に交差しない
 - [ ] 対応dock sizeが正しい
+- [ ] launch用component/macro bindingが成立
 
 通常発艦にLaunch Tubeは必須ではない。
 
@@ -184,6 +218,8 @@ Ship Storageは空母専用機能ではない。
 
 精密な装備形状ではなく、**ゲーム側が要求する配置空間**を優先する。
 
+ただしVisualizationが証明するのは主にclearanceであり、macro binding、animation、firing、runtime behaviorまでは証明しない。
+
 ---
 
 ## M. Reference Comparison
@@ -202,6 +238,7 @@ Ship Storageは空母専用機能ではない。
 - [ ] Hatch位置
 - [ ] Service構成
 - [ ] Launch Tube方向
+- [ ] component Connection ↔ ship macro bindingの対応
 
 ---
 
@@ -236,6 +273,14 @@ Ship Storageは空母専用機能ではない。
 - [ ] departure clearance
 - [ ] hatch clearance
 
+## Binding / Identity
+
+- [ ] Connection名の重複なし
+- [ ] 必要なmacro binding成立
+- [ ] macro側から存在しないConnectionを参照していない
+- [ ] group / tag / compatibilityがcurrent dataと整合
+- [ ] 公開済みID/Connection名を不用意に変更していない
+
 ## Service
 
 対応時:
@@ -259,18 +304,18 @@ Ship Storageは空母専用機能ではない。
 
 ### PASS
 
-X4機能配置とReserved Clearanceが成立。
+X4機能配置、Binding、Reserved Clearanceが成立。
 
 → Layout Freezeして詳細モデリングへ。
 
 ### REVISE
 
-Connectionは揃っているが局所干渉あり。
+Connectionは揃っているが局所干渉またはbinding不整合あり。
 
-→ Blockout / Connectionを局所修正して再検証。
+→ Blockout / Connection / bindingを局所修正して再検証。
 
 ### BLOCKED
 
-必要機能の配置空間が存在しない。
+必要機能の配置空間または成立するbinding構成が存在しない。
 
-→ 艦体レイアウトから再設計。
+→ 艦体レイアウトまたは機能構成から再設計。
