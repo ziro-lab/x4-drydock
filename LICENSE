@@ -1,0 +1,17 @@
+x4-drydock — Code License Notice
+
+Copyright (c) 2026 ziro-lab contributors
+
+Unless a source file or directory explicitly states otherwise, original source code and Blender automation scripts in this repository are licensed under:
+
+GNU General Public License, version 3 or any later version
+SPDX-License-Identifier: GPL-3.0-or-later
+
+Canonical license text:
+https://www.gnu.org/licenses/gpl-3.0.html
+
+This code-license notice does NOT apply to original 3D models, textures, artwork, reference images, or other creative assets. Those are governed by ASSET_LICENSE.md unless explicitly stated otherwise.
+
+Third-party components retain their own copyright notices and licenses. See THIRD_PARTY.md.
+
+If GPL-covered third-party code is added to this repository, its original copyright and license notices must be preserved, and the corresponding license text must be included as required by that component's license.
