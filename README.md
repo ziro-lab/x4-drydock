@@ -7,11 +7,13 @@ X4: Foundations 向けのオリジナル艦船を、Blender と自動化スク�
 ## Ship-building docs
 
 - [`docs/playbook/X4_SHIP_WORKFLOW.md`](docs/playbook/X4_SHIP_WORKFLOW.md) — BlockoutからLayout Freeze、Detail Modeling、X4 Asset Finishing、Export/XUConverterまでの制作フロー
-- [`docs/playbook/X4_PLACEMENT_CHECKLIST.md`](docs/playbook/X4_PLACEMENT_CHECKLIST.md) — Connection / Clearance / Dock / Storage / Service / Launch Tubeを含む配置Gate
+- [`docs/playbook/X4_PLACEMENT_CHECKLIST.md`](docs/playbook/X4_PLACEMENT_CHECKLIST.md) — Connection / Binding / Clearance / Dock / Storage / Service / Launch Tubeを含む配置Gate
+- [`docs/playbook/X4_EXPORT_RUNTIME_CHECKLIST.md`](docs/playbook/X4_EXPORT_RUNTIME_CHECKLIST.md) — Fresh Export / XUConverter / Package / 実X4 runtime確認のGate
 - [`docs/reference/PLACEMENT_PATTERNS.md`](docs/reference/PLACEMENT_PATTERNS.md) — バニラ艦・動作済みMOD艦から抽出した配置パターン
 - [`docs/reference/CONNECTION_VISUALIZATION.md`](docs/reference/CONNECTION_VISUALIZATION.md) — Egosoft ToolsのConnection VisualizationをClearance Authorityとして扱うための参照
+- [`docs/reference/EXTERNAL_REPO_FINDINGS_2026-09-16.md`](docs/reference/EXTERNAL_REPO_FINDINGS_2026-09-16.md) — 公開X4 modding repoとの比較と、本repoへ取り込んだ知見
 
-これらは2026-09-12に `X4-MOD-Builder` で作成した3D艦制作・配置監査資料を、艦制作側の作業場で再利用するためにコピーしたものです。
+基礎4資料は2026-09-12に `X4-MOD-Builder` で作成した3D艦制作・配置監査資料を再利用し、公開されている他のX4 modding実装から確認できたfailure modeを追加しています。
 
 ## 方針
 
