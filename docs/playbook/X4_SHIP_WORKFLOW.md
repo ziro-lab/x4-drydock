@@ -1,4 +1,4 @@
-# X4 Ship Production Workflow v0.1
+# X4 Ship Production Workflow v0.2
 
 ## Goal
 
@@ -18,6 +18,7 @@ X4向け艦船を、見た目だけ完成した3Dではなく **ゲーム内で�
 - Size: S / M / L / XL
 - Role: destroyer / carrier / auxiliary / transport / mining / etc.
 - おおよその全長・全幅・全高
+- [`SHIP_DIMENSION_BASELINES.md`](../reference/SHIP_DIMENSION_BASELINES.md) と照合したscale position
 - Fixed Weapon
 - Turret
 - Shield
@@ -33,6 +34,9 @@ Output例:
 ```text
 Size: L
 Role: Destroyer
+Target L/W/H: 800 / 260 / 180 m
+Scale reference: L central band
+Scale verdict: NORMAL
 Engine: L Advanced x4
 Main Weapon: L x2
 Turret: L x2 / M x12
@@ -41,6 +45,16 @@ Ship Storage: S / XS
 Repair/Rearm: No
 Launch Tube: No
 ```
+
+`Scale verdict`:
+
+```text
+NORMAL  = current referenceの中央帯付近
+EDGE    = observed range内だが端に近い
+OUTLIER = observed range外。意図と理由を記録
+```
+
+OUTLIERは自動却下しない。意図せずclass scaleを外れることを防ぐためのflagとして使う。
 
 ---
 
@@ -57,6 +71,8 @@ Launch Tube: No
 
 他艦からコピーするのは絶対座標ではなく、**相対配置・向き・clearance・機能構成**。
 
+Scaleについては1隻だけを基準にせず、class range / role / 複数の近似艦を参照する。
+
 ---
 
 ## Phase 2 — Blockout
@@ -72,6 +88,19 @@ Launch Tube: No
 - おおよその全長 / 全幅 / 全高
 
 この段階では装甲板・パネル・アンテナ等を仕上げない。
+
+### Scale Gate
+
+Blockout確定前に:
+
+- [ ] Target classのabsolute observed rangeを確認
+- [ ] central reference bandを確認
+- [ ] LengthだけでなくWidth / Heightの見た目も近似艦と比較
+- [ ] Dock / Engine / Turretのreserved volumeを置ける余裕がある
+- [ ] OUTLIERの場合、意図したdesign reasonを記録
+- [ ] 後からCurrent 9.x再計測値が得られた場合に再評価できるようsource versionを記録
+
+暫定的な5.00 length baselineでは、特にM→Lの物理サイズ差が大きい。L艦を200〜300m程度で進める場合は意図的OUTLIERとして扱う。
 
 Checkpoint: `BLOCKOUT_BASELINE`
 
@@ -278,11 +307,12 @@ Exclusion Zone
 以下を満たしたら配置を固定。
 
 ```text
-Required Connections     PASS
-Equipment Clearance      PASS
-Dock Clearance           PASS
-Orientation              PASS
-Functional Relationship  PASS
+Scale / Volume             PASS or intentional OUTLIER
+Required Connections       PASS
+Equipment Clearance        PASS
+Dock Clearance             PASS
+Orientation                PASS
+Functional Relationship    PASS
 ```
 
 WARNは残してよいがFAILは0件。
@@ -368,6 +398,8 @@ Job 4: Fresh reopen / output inspection
 ```
 
 Converterが成功しても、material / UV / normal / tangent / collision等の警告があれば完成扱いにしない。
+
+詳細は [`X4_EXPORT_RUNTIME_CHECKLIST.md`](X4_EXPORT_RUNTIME_CHECKLIST.md) を使う。
 
 ---
 
