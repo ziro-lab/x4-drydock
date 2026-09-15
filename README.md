@@ -4,6 +4,15 @@ X4: Foundations 向けのオリジナル艦船を、Blender と自動化スク�
 
 現時点では完成した一般向けツールではなく、艦船モデル、Blender スクリプト、検証処理、GitHub Actions などを試すための作業場として使います。
 
+## Ship-building docs
+
+- [`docs/playbook/X4_SHIP_WORKFLOW.md`](docs/playbook/X4_SHIP_WORKFLOW.md) — BlockoutからLayout Freeze、Detail Modeling、X4 Asset Finishing、Export/XUConverterまでの制作フロー
+- [`docs/playbook/X4_PLACEMENT_CHECKLIST.md`](docs/playbook/X4_PLACEMENT_CHECKLIST.md) — Connection / Clearance / Dock / Storage / Service / Launch Tubeを含む配置Gate
+- [`docs/reference/PLACEMENT_PATTERNS.md`](docs/reference/PLACEMENT_PATTERNS.md) — バニラ艦・動作済みMOD艦から抽出した配置パターン
+- [`docs/reference/CONNECTION_VISUALIZATION.md`](docs/reference/CONNECTION_VISUALIZATION.md) — Egosoft ToolsのConnection VisualizationをClearance Authorityとして扱うための参照
+
+これらは2026-09-12に `X4-MOD-Builder` で作成した3D艦制作・配置監査資料を、艦制作側の作業場で再利用するためにコピーしたものです。
+
 ## 方針
 
 - 艦船本体、テクスチャ、画像などのオリジナル制作物と、制作・検証用コードの権利を分けて管理します。
