@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# Blender temporary / backup files
+*.blend1
+*.blend2
+*.blend@
+*.blend~
+
+# Local build outputs
+/build/
+/dist/
+/out/
+/tmp/
+/temp/
+/p1data/
+
+# Private runtime / local tool staging
+/private/
+/private-runtime/
+/runtime-private/
+/tools-private/
+/local-tools/
+
+# X4 extracted game data / local game mirrors
+/game-data/
+/extracted-game/
+/extracted-assets/
+/x4-install/
+*.cat
+*.dat
+
+# Egosoft proprietary tool packages / payloads
+EgosoftBlenderModTools*.zip
+XUConverter.exe
+XUConverter*.exe
+P1*Converter*.exe
+Blender_Properties.xml
+
+# Common native binaries and installer payloads kept out by default
+*.msi
+*.cab
+*.dll
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
