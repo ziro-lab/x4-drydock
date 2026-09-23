@@ -406,7 +406,7 @@ def main() -> int:
     if args.validate_only:
         return 0
 
-    output = args.output or args.spec.with_name(f"{spec.get('ship_id', 'ship')}_blockout.blend")
+    output = args.output or (Path("build") / f"{spec.get('ship_id', 'ship')}_blockout.blend")
     build_blender_scene(spec, output)
     return 0
 
