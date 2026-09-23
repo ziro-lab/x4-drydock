@@ -4,9 +4,36 @@ X4: Foundations 向けのオリジナル艦船を、Blender と自動化スク�
 
 現時点では完成した一般向けツールではなく、艦船モデル、Blender スクリプト、検証処理、GitHub Actions などを試すための作業場として使います。
 
+## Current production boundary
+
+当面、このrepoの主目標は **X4で使うことを考慮した艦船モデルをBlender上で仕上げ、手元のEgosoft Mod Tools工程へ渡せる状態にすること** です。
+
+repo / GitHub Actions側で担当する範囲:
+
+- Blockout / silhouette / scale
+- X4 equipment・dock・hangar等のreserved volumeを考慮した配置設計
+- detailed modeling
+- UV / normals / material slot等のBlender側asset preparation
+- collision / LOD / wreck等、Blenderだけで準備できる範囲
+- diagnostic view / dimension / overlap等の自動検査
+- Mod Tools工程で必要になるConnection候補位置・向き・命名のhandoff情報
+
+手元工程へ残す範囲:
+
+- Egosoft Blender Mod Toolsを実際に読み込んだ最終Connection調整
+- current tool dataに依存するtag / group / bindingの確定
+- Egosoft exporter
+- XUConverter
+- extension packageへの組み込み
+- 実X4でのruntime確認
+
+手元でMod Tools工程を実行できるかは現時点で未確定です。そのため、**手元工程が未実施でもrepo側の制作を止めない**方針にします。
+
+repo側の標準完成点は `X4_AWARE_BLENDER_HANDOFF` とし、`Game-ready` / `Runtime PASS` は手元工程を実際に通せた場合だけ別途付けます。
+
 ## Active pilot
 
-- [`ships/dx500_pilot/README.md`](ships/dx500_pilot/README.md) — 500 m級L探査/支援艦を、箱型モジュール中心のBlockoutからX4 Game-ready Candidateまで通す試験運用
+- [`ships/dx500_pilot/README.md`](ships/dx500_pilot/README.md) — 500 m級L探査/支援艦を、箱型モジュール中心のBlockoutから `X4_AWARE_BLENDER_HANDOFF` まで通す試験運用
 - [`ships/dx500_pilot/blockout_spec.json`](ships/dx500_pilot/blockout_spec.json) — 寸法・モジュール・4基エンジン・S dock仮予約のdata-driven spec
 - [`tools/build_modular_blockout.py`](tools/build_modular_blockout.py) — 通常Pythonでspec検査、Blender上でBlockout scene生成
 
