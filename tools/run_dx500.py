@@ -8,7 +8,6 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 import time
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -23,9 +22,12 @@ def main():
     if out.exists() and any(out.iterdir()):ap.error('Output must be empty; never reuse stale artifacts')
     out.mkdir(parents=True,exist_ok=True)
     version=subprocess.check_output([str(blender),'--version'],text=True,timeout=30).splitlines()[0]
-    if version!='Blender 5.2.1':ap.error('This pilot is pinned to Blender 5.2.1, got '+version)
-    git=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,text=True,capture_output=True,timeout=15)
-    source=git.stdout.strip() if git.returncode==0 else 'UNCOMMITTED_LOCAL'
+    if version not in ('Blender 5.2.1','Blender 5.2.1 LTS'):
+        ap.error('This pilot is pinned to Blender 5.2.1, got '+version)
+    source='UNCOMMITTED_LOCAL'
+    if shutil.which('git'):
+        git=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,text=True,capture_output=True,timeout=15)
+        if git.returncode==0:source=git.stdout.strip()
     env=dict(os.environ,SOURCE_COMMIT=source)
     script=str(ROOT/'tools/dx500_pipeline.py')
     stages=[('build',None),('inspect','dx500_handoff.blend'),('inspect-geometry','dx500_geometry_only.blend')]
