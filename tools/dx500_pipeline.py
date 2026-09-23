@@ -306,6 +306,9 @@ def build(out):
 def inspect(out, geometry_only=False):
     import bmesh
     from mathutils import Vector
+    # Hidden collections are not evaluated after reopen; expose them before querying matrix_world.
+    # Inspection is read-only and never saves these temporary visibility changes.
+    for collection in bpy.data.collections: collection.hide_viewport=False
     bpy.context.view_layer.update();errors=[];stats={}
     for level in range(4):
         name=f'LOD{level}';cc=bpy.data.collections.get(name)
