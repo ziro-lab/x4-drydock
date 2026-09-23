@@ -31,17 +31,25 @@ repo / GitHub Actions側で担当する範囲:
 
 repo側の標準完成点は `X4_AWARE_BLENDER_HANDOFF` とし、`Game-ready` / `Runtime PASS` は手元工程を実際に通せた場合だけ別途付けます。
 
-## Active pilot
+## Active pilot — DX-500
 
-- [`ships/dx500_pilot/README.md`](ships/dx500_pilot/README.md) — 500 m級L探査/支援艦を、箱型モジュール中心のBlockoutから `X4_AWARE_BLENDER_HANDOFF` まで通す試験運用
-- [`ships/dx500_pilot/blockout_spec.json`](ships/dx500_pilot/blockout_spec.json) — 寸法・モジュール・4基エンジン・S dock仮予約のdata-driven spec
-- [`tools/build_modular_blockout.py`](tools/build_modular_blockout.py) — 通常Pythonでspec検査、Blender上でBlockout scene生成
+現在の入口は **[`ships/dx500_pilot/PIPELINE.md`](ships/dx500_pilot/PIPELINE.md)** です。成果物の使い分け、再生成、手元工程、未確認事項と工程監査をまとめています。
 
+- [`tools/dx500_pipeline.py`](tools/dx500_pipeline.py) — +Y艦首の完成モデル、実体のある格納空間、LOD0〜3、collision/convex/wreck素材、接続候補、OBJを生成。別プロセスで再読込検査と確認画像生成。
+- [`tools/run_dx500.py`](tools/run_dx500.py) — 新規出力フォルダで各工程を時間制限付き実行し、手元受け渡しファイルとSHA256を作成。
+- [`.github/workflows/dx500-blender.yml`](.github/workflows/dx500-blender.yml) — 公式Blender 5.2.1 LTSの取得・hash照合、テスト、生成・検査・画像、Actions Artifact。
+- [`ships/dx500_pilot/blockout_spec.json`](ships/dx500_pilot/blockout_spec.json) — 初期シルエットの入力。旧−X艦首からの変換や最終配置との差分はPIPELINE.mdで明示。
+
+Actionsの成功runから `dx500-blender-handoff-<commit>` を取得し、同梱の `START_HERE.md` を読む。確認・編集には `dx500_handoff.blend`、手元のMod Tools設定開始には `dx500_geometry_only.blend` を使う。後者にも正式なX4 tag/bindingはまだ入っていません。
+
+旧[`Blockout README`](ships/dx500_pilot/README.md)と[`build_modular_blockout.py`](tools/build_modular_blockout.py)は初期Blockoutの記録です。完成モデルの再生成には新pipelineを使用してください。
+
+**Blender側の仮予約レイアウト確定と、正式なX4 Functional Layout PASSは別です。** 現行Egosoft clearance未確認をPASSへ読み替えず、詳細はpilotのPIPELINE.mdを優先します。
 
 ## Ship-building docs
 
 - [`docs/playbook/X4_SHIP_WORKFLOW.md`](docs/playbook/X4_SHIP_WORKFLOW.md) — BlockoutからLayout Freeze、Detail Modeling、X4 Asset Finishing、Export/XUConverterまでの制作フロー
-- [`docs/playbook/X4_PLACEMENT_CHECKLIST.md`](docs/playbook/X4_PLACEMENT_CHECKLIST.md) — Connection / Binding / Clearance / Dock / Storage / Service / Launch Tubeを含む配置Gate
+- [`docs/playbook/X4_PLACEMENT_CHECKLIST.md`](docs/playbook/X4_PLACEMENT_CHECKLIST.md) — Connection / Binding / Clearance / Dock / Storage / Service / Launch Tubeを含む正式配置Gate（手元で現行ツールを使う段階）
 - [`docs/playbook/X4_EXPORT_RUNTIME_CHECKLIST.md`](docs/playbook/X4_EXPORT_RUNTIME_CHECKLIST.md) — Fresh Export / XUConverter / Package / 実X4 runtime確認のGate
 - [`docs/reference/SHIP_DIMENSION_BASELINES.md`](docs/reference/SHIP_DIMENSION_BASELINES.md) — S/M/L/XLの実測寸法帯とCurrent 9.x再計測方針
 - [`docs/reference/PLACEMENT_PATTERNS.md`](docs/reference/PLACEMENT_PATTERNS.md) — バニラ艦・動作済みMOD艦から抽出した配置パターン
