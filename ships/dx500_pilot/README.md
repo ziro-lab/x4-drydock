@@ -110,4 +110,23 @@ DX500_PILOT/
 3. 艦尾4発エンジンの見え方
 4. 上面S dockをこの位置に残すか
 
-ここが通ったら`BLOCKOUT_BASELINE`とし、その次にX4 Connection / current clearanceを入れてFunctional Skeletonへ進みます。
+ここが通ったら`BLOCKOUT_BASELINE`とし、その次にX4向けのreserved volume・Connection候補位置・dock経路を詰めます。正式なEgosoft Connection化とMod Tools上の最終調整は手元工程へ残します。
+
+
+## Pilot completion target
+
+この試験艦のrepo側ゴールは `X4_AWARE_BLENDER_HANDOFF` です。
+
+ここまでで目指す状態:
+
+```text
+Blender model complete
+X4 scale / orientation reviewed
+engine / shield / turret reserved volume considered
+dock / hangar corridor considered
+collision / LOD / wreck prepared as far as Blender-only work allows
+Connection candidate positions/orientations recorded
+remaining Mod Tools work listed
+```
+
+Egosoft Mod Tools / exporter / XUConverter / actual X4 runtimeは、このpilotの必須完了条件にはしません。手元で実行可能と確認できた時点で後段として接続します。
