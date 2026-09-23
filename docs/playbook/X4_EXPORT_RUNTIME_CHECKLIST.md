@@ -1,8 +1,10 @@
-# X4 Export / Converter / Runtime Checklist v0.1
+# X4 Export / Converter / Runtime Checklist v0.2
 
-このチェックリストは、**Blenderで見た目が成立した艦を、古い中間物や見せかけの成功に引っ張られず、Current X4で動くCandidateまで持っていく**ために使う。
+このチェックリストは、**手元でEgosoft Mod Tools工程を実行できることが確認できた場合に限り**、Blenderで仕上げた艦をCurrent X4で動くCandidateまで持っていくために使う。
 
-`X4_PLACEMENT_CHECKLIST.md` がLayout Freeze前のGateなら、こちらはその後の **Asset → Export → Convert → Package → X4 Runtime** のGate。
+通常のrepo / GitHub Actions制作ではこのチェックリストを完走しなくてよい。標準完成点は `X4_AWARE_BLENDER_HANDOFF` であり、その後の **Mod Tools → Export → Convert → Package → X4 Runtime** はlocal handoff工程として扱う。
+
+手元環境でMod Toolsを実行できない、またはまだ確認できていない場合は、ここを理由にBlender側の制作をBLOCKEDにしない。
 
 ---
 
