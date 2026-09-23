@@ -4,6 +4,13 @@ X4: Foundations 向けのオリジナル艦船を、Blender と自動化スク�
 
 現時点では完成した一般向けツールではなく、艦船モデル、Blender スクリプト、検証処理、GitHub Actions などを試すための作業場として使います。
 
+## Active pilot
+
+- [`ships/dx500_pilot/README.md`](ships/dx500_pilot/README.md) — 500 m級L探査/支援艦を、箱型モジュール中心のBlockoutからX4 Game-ready Candidateまで通す試験運用
+- [`ships/dx500_pilot/blockout_spec.json`](ships/dx500_pilot/blockout_spec.json) — 寸法・モジュール・4基エンジン・S dock仮予約のdata-driven spec
+- [`tools/build_modular_blockout.py`](tools/build_modular_blockout.py) — 通常Pythonでspec検査、Blender上でBlockout scene生成
+
+
 ## Ship-building docs
 
 - [`docs/playbook/X4_SHIP_WORKFLOW.md`](docs/playbook/X4_SHIP_WORKFLOW.md) — BlockoutからLayout Freeze、Detail Modeling、X4 Asset Finishing、Export/XUConverterまでの制作フロー
