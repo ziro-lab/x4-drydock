@@ -1,180 +1,76 @@
-# Egosoft Connection Visualization Reference v0.3
+# Egosoft Connection Visualization Reference v0.4
 
 ## Purpose
 
 X4艦の設計で必要なのは、装備モデルの精密Bounding Boxを毎回調べることではなく、**船体側が予約すべき配置空間を把握すること**。
 
-Egosoft Blender Mod ToolsはConnection tagに応じてViewportへbox / cylinder等のVisualizationを描画する。
-
-このVisualizationをX4艦設計の**Clearance Authority**として優先する。
+Egosoft Blender Mod ToolsはConnection tagに応じてViewportへbox / cylinder等のVisualizationを描画する。このVisualizationをX4艦設計のClearance Authorityとして優先する。
 
 ## Authority rule
 
-**現行 `Blender_Properties.xml` をAuthorityにする。**
+**実際に使う現行ツールの `Blender_Properties.xml` をAuthorityにする。** この文書の数値は調査時点のsnapshotであり、validatorへ固定値として埋め込むための仕様ではない。
 
-このファイルに記載する数値は調査時点のsnapshotであり、validatorへ固定値として埋め込むための仕様ではない。
+## Reader availability — corrected 2026-09-24
 
-Workbench / Toolを実装する場合は、可能な限り現行`Blender_Properties.xml`を読み取る。
+以前のこの文書には `tools/connection_visualization.py` を「Implemented reader」として呼び出す説明がありましたが、x4-drydockのファイル一覧には実装がありません。関連parser testsの存在もこのrepoでは確認できません。コピー元の説明を、このrepoの実装証拠として扱ってはいけません。
 
----
+DX500 pilotは独自の設計用AABB予約を使います。`tools/dx500_pipeline.py` の検査は **Blenderモデルと仮予約との明白な干渉を確認するだけ** で、公式Visualizationの代用品ではありません。
 
-## Implemented reader
+今回、現行ツールのデータなしでparserを推測実装することはしません。手元で公式ツールが使える場合は、まずそのVisualizationで確認してください。自動readerが必要になったら、以下を実装・検証する候補にします。
 
-`tools/connection_visualization.py`は、指定された`Blender_Properties.xml`から`connection_visualizations`を探し、Connection tagsに対応するvisualization ruleを解決する。
+### Proposed reader behavior
 
-```bash
-python tools/connection_visualization.py \
-  ~/Documents/Blender/Blender_Properties.xml \
-  --tags "engine large standard" \
-  --pretty
-```
+1. queryのtag集合にruleのrequired tagsが全て含まれるruleを候補とする。
+2. required tag数が最大のruleを最も具体的な候補とする。ただし実ツールの解決挙動と照合する。
+3. 同specificityのruleが複数なら、未確認の順序を推測せず `AMBIGUOUS` とする。
+4. primitive/dimensionを正規化できないときはraw属性を保持し、黙ってsnapshotへfallbackしない。
+5. 入力XMLのSHA-256、Blender版、Egosoft Tools版、検証時刻を記録する。
 
-### Resolution policy
-
-1. query側のtag集合に、ruleのrequired tagsがすべて含まれるruleだけ候補にする。
-2. 候補のうちrequired tag数が最大のruleを最も具体的なruleとする。
-3. 同じspecificityのruleが複数残る場合は順序を推測せず`AMBIGUOUS`にする。
-4. primitive / dimensionを正規化できない場合はraw attributesを保持し、黙ってsnapshot値へfallbackしない。
-
-### Source identity
-
-Catalog出力には入力XMLのSHA-256を記録する。
-
-Validation report側では将来的に少なくとも次を一緒に保存する。
-
-```text
-Blender version
-Egosoft Blender Mod Tools version
-Blender_Properties.xml SHA-256
-validation timestamp
-```
-
-### Runtime acceptance boundary
-
-Repo内testsはEgosoft配布XMLを再配布せず、synthetic fixtureだけを使用する。
-
-したがって、CI PASSは以下を証明する。
-
-- parserの構文・基本契約
-- tag specificity解決
-- ambiguity fail-closed
-- 複数の一般的なXML表現の正規化
-
-一方で、**現行Egosoft Blender Mod Tools v0.7.0の実`Blender_Properties.xml`へ適用したruntime probeは別Acceptance**とする。
-
----
+synthetic fixtureのテストと、実際の配布XMLへの適用確認は別のAcceptance。将来parserのテストが通っても、公式ツールでの描画・解決規則の一致は別途検証する。
 
 ## Snapshot observed during research
 
-Research date: 2026-09-12
+Research date: 2026-09-12. 以下は引き継いだ調査メモであり、今回のpilotでは実ツールへ再照合していません。
 
-### L Engine
+| Equipment | Standard snapshot | Advanced/Boron snapshot |
+| --- | --- | --- |
+| L Engine | cylinder 50 x 50 x 50 m | cylinder 25 x 25 x 25 m |
+| XL Engine | cylinder 150 x 150 x 150 m | cylinder 75 x 75 x 75 m |
+| L Shield | box 32 x 64 x 16 m | box 16 x 32 x 8 m |
+| XL Shield | box 96 x 192 x 48 m | box 48 x 96 x 24 m |
+| L Turret | box 64 x 64 x 64 m | box 32 x 32 x 32 m |
 
-```text
-standard: cylinder 50 x 50 x 50 m
-advanced/Boron: cylinder 25 x 25 x 25 m
-```
-
-### XL Engine
-
-```text
-standard: cylinder 150 x 150 x 150 m
-advanced/Boron: cylinder 75 x 75 x 75 m
-```
-
-### L Shield
-
-```text
-standard: box 32 x 64 x 16 m
-advanced/Boron: box 16 x 32 x 8 m
-```
-
-### XL Shield
-
-```text
-standard: box 96 x 192 x 48 m
-advanced/Boron: box 48 x 96 x 24 m
-```
-
-### L Turret
-
-```text
-standard: box 64 x 64 x 64 m
-advanced/Boron: box 32 x 32 x 32 m
-```
-
-### Dock approach / exclusion snapshots
+Dock/exclusion snapshots:
 
 ```text
 ship_s exclusion zone: 70 x 400 x 70 m
 ship_m exclusion zone: 180 x 500 x 180 m
 ```
 
-These values must be re-read from the active tool data when version-sensitive correctness matters.
-
----
+向き、原点、primitiveの解釈を含め、active tool dataから読み直すこと。値だけを新しい船体へ貼り付けない。
 
 ## Design interpretation
 
-Visualization should answer:
+Visualization should answer whether equipment can fit and whether the ship's reserved approach/departure space is obstructed. It is not intended to reproduce every visual protrusion of the final equipment model.
+
+Visualizationだけでは次を証明できません。
+
+- component Connectionとship macroのbinding
+- binding先macroのattachment connection
+- Connection名/IDの維持
+- custom turretのIK・articulation・muzzle/firing
+- Dock・animationの実挙動
+- save互換とX4 runtime解釈
 
 ```text
-Can the selected equipment fit here?
-Can it rotate / occupy its expected zone without obvious hull conflict?
-Can a ship approach / depart the dock without the hull blocking the reserved corridor?
+Current Visualization check
+→ Binding / Identity validation
+→ Fresh Export / Package validation
+→ X4 Runtime Corroboration
 ```
 
-It is not intended to reproduce every visual protrusion of the final equipment model.
+## Future Workbench integration
 
-### What Visualization does NOT prove
+必要になったときにactive XMLの探索、reader、tag解決、予約空間、船体との検査、証拠出力を統合する。汎用3D CoreへX4固有tag名を持ち込まない。
 
-Visualization PASSだけでは、次は証明できない。
-
-```text
-component Connection ↔ ship macro binding
-binding先macroのattachment connection
-Connection name / ID persistence
-custom turret IK / articulation
-muzzle / firing axis
-Dockの実runtime behavior
-animation behavior
-save compatibility
-X4 runtime interpretation
-```
-
-したがって:
-
-```text
-Visualization PASS
-    ↓
-Binding / Identity validation
-    ↓
-Export / Package validation
-    ↓
-X4 Runtime Corroboration
-```
-
-まで別Gateとして扱う。
-
----
-
-## Workbench integration target
-
-A future `x4_layout` capability should:
-
-1. locate active `Blender_Properties.xml`
-2. call/consume the domain reader from this repo
-3. resolve a Connection's tags to the active visualization rule
-4. expose the shape / dimensions as Reserved Clearance
-5. compare Reserved Clearance against Hull / neighboring reserved zones
-6. produce PASS / WARN / FAIL evidence
-
-Do not make the generic 3D Core aware of X4 tag names.
-
----
-
-## Version boundary
-
-X4 equipment standards can change between game/tool versions.
-
-A stale snapshot must not silently override current tool data.
+古いsnapshotを、現行ツールの値より優先してはいけません。

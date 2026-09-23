@@ -1,13 +1,41 @@
-# X4 Ship Production Workflow v0.2
+# X4 Ship Production Workflow v0.3
 
 ## Goal
 
-X4向け艦船を、見た目だけ完成した3Dではなく **ゲーム内で機能する構造を先に成立させてから詳細化する**。
+X4向け艦船を、見た目だけ完成した3Dではなく **X4で使うための空間・装備・dock条件を考慮したBlender完成モデル** まで持っていく。
+
+当面のrepo標準ゴールは、Egosoft Mod Toolsなしでも成立する `X4_AWARE_BLENDER_HANDOFF`。
 
 中心原則:
 
-> Blockoutの次にX4 ConnectionとClearanceを固める。  
-> Layout Freeze後に詳細造形へ進む。
+> Blockoutの次にX4向けReserved Layoutを固める。  
+> Layout Freeze後に詳細造形へ進む。  
+> Egosoft Mod Tools固有の最終Connection / binding / exportは手元工程へ渡す。
+
+### Current execution boundary
+
+repo / GitHub Actions側では、Blenderだけで検証できる範囲をできるだけ完成させる。
+
+```text
+Blockout
+→ X4-aware reserved layout
+→ Layout Freeze
+→ Detail Modeling
+→ Blender asset finishing
+→ X4_AWARE_BLENDER_HANDOFF
+```
+
+手元で実行できることが確認できた場合のみ続ける。
+
+```text
+Egosoft Mod Tools final adjustment
+→ Export
+→ XUConverter
+→ Package
+→ X4 runtime acceptance
+```
+
+後半が未実施でも、前半の制作はBLOCKEDにしない。
 
 ---
 
@@ -106,34 +134,37 @@ Checkpoint: `BLOCKOUT_BASELINE`
 
 ---
 
-## Phase 3 — X4 Functional Skeleton
+## Phase 3 — X4-aware Functional Reservation
 
 ### Basic large ship
 
-必要に応じて配置:
+必要に応じて **最終Connectionそのものではなく、候補位置・向き・reserved volume** を配置する。
 
 ```text
-cockpit
-playercontrol
-aimtarget
-countermeasures
-dynamicroom
-engine
-shield
-weapon
-turret
+cockpit candidate
+playercontrol candidate
+aimtarget candidate
+countermeasures candidate
+dynamicroom candidate
+engine reserve
+shield reserve
+weapon reserve
+turret reserve
 ```
+
+Egosoft Mod Toolsを使える環境が確認できた場合は、手元工程でこれらを正式Connectionへ変換・調整する。
 
 ### Dock-capable ship
 
-追加:
+追加候補:
 
 ```text
-dockarea
-dockingbay / shipstorage
-storage
-dock_xs
-optional dock hatch
+dockarea candidate
+dockingbay / shipstorage reserve
+storage reserve
+dock_xs candidate
+optional dock hatch volume
+approach / departure corridor reserve
 ```
 
 Ship Storageは空母専用ではない。通常L艦にも存在し得る。
@@ -183,7 +214,7 @@ Shield ↔ Hull
 Weapon firing direction ↔ Hull
 ```
 
-Egosoft Toolsが持つVisualizationをAuthorityとして使う。
+現行Egosoft ToolsのVisualizationを取得できる場合はAuthorityとして使う。Actions等で取得できない場合はrepoのsnapshot / handoff markerを暫定利用し、正式PASSではなく `PROVISIONAL` と記録する。
 
 ### 4B Dock Clearance
 
@@ -317,9 +348,9 @@ Functional Relationship    PASS
 
 WARNは残してよいがFAILは0件。
 
-Checkpoint: `X4_FUNCTIONAL_LAYOUT_FIXED`
+Checkpoint: `X4_AWARE_LAYOUT_FIXED`
 
-Layout Freeze後はConnectionとReserved Clearanceを原則変更しない。
+Layout Freeze後はReserved ClearanceとConnection候補位置を原則変更しない。
 
 変更が必要になった場合:
 
@@ -361,9 +392,9 @@ Connection Visualization領域はReserved Zoneとして扱う。
 
 ---
 
-## Phase 6 — X4 Asset Finishing
+## Phase 6 — Blender Asset Finishing
 
-形状完成後にゲーム用技術要素を仕上げる。
+形状完成後に、Blenderだけで準備できるゲーム向け技術要素を仕上げる。
 
 ```text
 Materials
@@ -378,9 +409,29 @@ other Animation
 
 大型艦ではLOD0〜3とWreckを基本品質目標にする。ただし実艦・対象サイズに合わせる。
 
+ここまでがrepo側の標準担当範囲。
+
+Checkpoint: `X4_AWARE_BLENDER_HANDOFF`
+
+この時点で、次をhandoff packetとして残す。
+
+```text
+source .blend
+source commit
+target X4 class / role
+dimensions
+reserved equipment volumes
+dock / hangar corridor assumptions
+Connection candidate names / positions / orientations
+known provisional clearances
+remaining Mod Tools work
+```
+
 ---
 
-## Phase 7 — Export / Converter
+## Phase 7 — Local Mod Tools / Export / Converter (optional handoff)
+
+このPhaseはrepoの標準完成条件ではない。手元でEgosoft Mod Tools工程を実行できることが確認できた場合だけ行う。
 
 重い処理は分離する。
 
@@ -437,22 +488,38 @@ Technical gateはTool側で行う。
 
 見た目が完成。
 
-### Technical Complete
+### X4-aware Blender Handoff
+
+repo側の標準完成点。
 
 最低限:
 
 ```text
-Connection PASS
-Clearance PASS
-Collision PASS
-LOD PASS
-Wreck PASS
-Export PASS
-Converter PASS
+Visual Complete
+Scale / orientation reviewed
+Reserved equipment layout reviewed
+Dock / hangar volume reviewed（採用時）
+Collision prepared
+LOD prepared
+Wreck prepared（必要時）
+Blender-side validation PASS
+Handoff packet complete
 ```
 
-### Game-ready Candidate
+正式なEgosoft Connection / binding / Export / Converterは要求しない。
 
-Visual Complete + Technical Complete。
+### Offline Mod-ready Candidate
 
-ゲーム内検証を行う場合は、このCandidateから開始する。
+手元のMod Tools工程まで実行できた場合のみ使用。
+
+```text
+X4-aware Blender Handoff
++ current Connection / binding PASS
++ Export PASS
++ Converter PASS
++ Package PASS
+```
+
+### Runtime Corroborated
+
+Offline Mod-ready Candidateを実X4へ投入し、対象機能のruntime確認まで取れた状態。
