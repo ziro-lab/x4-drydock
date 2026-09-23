@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "ship_id": "dx500_pilot",
+  "display_name": "DX-500 Pilot",
+  "units": "m",
+  "axis_convention": {
+    "x": "bow (-) to stern (+)",
+    "y": "port (-) to starboard (+)",
+    "z": "down (-) to up (+)"
+  },
+  "intent": {
+    "size_class": "L",
+    "role": "long-range exploration / support",
+    "target_hull_envelope_m": [500.0, 320.0, 180.0],
+    "scale_verdict": "EDGE",
+    "engine_plan": "L standard x4, symmetric 2x2 stern cluster",
+    "dock_plan": "single top-side S dock placeholder with S/XS storage intent",
+    "repair_rearm": false,
+    "launch_tube": false,
+    "fixed_weapon": "not reserved in pilot blockout",
+    "turrets": "defer until Blockout Review 1"
+  },
+  "visual_policy": {
+    "style": "box-first modular industrial blockout",
+    "reference_image": "loose silhouette/module inspiration only; no exact reproduction",
+    "deferred": [
+      "solar/radiator wings",
+      "antennas",
+      "armor paneling",
+      "surface greebles",
+      "final engine geometry",
+      "final dock geometry"
+    ]
+  },
+  "modules": [
+    {
+      "name": "M01_sensor_airlock",
+      "purpose": "sensor / forward access",
+      "center": [-225.0, 0.0, 0.0],
+      "size": [50.0, 140.0, 100.0],
+      "bevel": 4.0
+    },
+    {
+      "name": "M02_command",
+      "purpose": "command / navigation",
+      "center": [-175.0, 0.0, 0.0],
+      "size": [40.0, 180.0, 120.0],
+      "bevel": 4.0
+    },
+    {
+      "name": "M03_habitation",
+      "purpose": "habitation",
+      "center": [-115.0, 0.0, 0.0],
+      "size": [70.0, 240.0, 150.0],
+      "bevel": 5.0
+    },
+    {
+      "name": "M04_life_support",
+      "purpose": "life support / stores",
+      "center": [-47.5, 0.0, 0.0],
+      "size": [55.0, 220.0, 150.0],
+      "bevel": 5.0
+    },
+    {
+      "name": "M05_cargo",
+      "purpose": "cargo",
+      "center": [27.5, 0.0, 0.0],
+      "size": [85.0, 260.0, 160.0],
+      "bevel": 5.0
+    },
+    {
+      "name": "M06_workshop_hangar",
+      "purpose": "workshop / hangar volume",
+      "center": [105.0, 0.0, 0.0],
+      "size": [60.0, 240.0, 160.0],
+      "bevel": 5.0
+    },
+    {
+      "name": "M07_power",
+      "purpose": "power management",
+      "center": [160.0, 0.0, 0.0],
+      "size": [40.0, 220.0, 160.0],
+      "bevel": 4.0
+    },
+    {
+      "name": "M08_propulsion",
+      "purpose": "propulsion support / engineering",
+      "center": [217.5, 0.0, 0.0],
+      "size": [65.0, 320.0, 180.0],
+      "bevel": 5.0
+    }
+  ],
+  "connector_pattern": {
+    "beam_cross_section_m": [8.0, 8.0],
+    "beam_offsets_yz_m": [
+      [-45.0, -35.0],
+      [-45.0, 35.0],
+      [45.0, -35.0],
+      [45.0, 35.0]
+    ],
+    "overlap_into_module_m": 2.5
+  },
+  "engines": [
+    {
+      "name": "ENG_L_01",
+      "center": [272.0, -85.0, -45.0],
+      "length": 44.0,
+      "diameter": 50.0,
+      "clearance_snapshot": [50.0, 50.0, 50.0]
+    },
+    {
+      "name": "ENG_L_02",
+      "center": [272.0, 85.0, -45.0],
+      "length": 44.0,
+      "diameter": 50.0,
+      "clearance_snapshot": [50.0, 50.0, 50.0]
+    },
+    {
+      "name": "ENG_L_03",
+      "center": [272.0, -85.0, 45.0],
+      "length": 44.0,
+      "diameter": 50.0,
+      "clearance_snapshot": [50.0, 50.0, 50.0]
+    },
+    {
+      "name": "ENG_L_04",
+      "center": [272.0, 85.0, 45.0],
+      "length": 44.0,
+      "diameter": 50.0,
+      "clearance_snapshot": [50.0, 50.0, 50.0]
+    }
+  ],
+  "dock_placeholders": [
+    {
+      "name": "DOCK_S_TOP_01",
+      "center": [70.0, 0.0, 84.0],
+      "size": [100.0, 90.0, 8.0],
+      "approach_reserve_center": [70.0, 0.0, 284.0],
+      "approach_reserve_size": [90.0, 90.0, 400.0],
+      "note": "Conceptual blockout reserve only. Replace with current Egosoft Connection Visualization before Layout Freeze."
+    }
+  ],
+  "markers": [
+    {
+      "name": "MARK_cockpit_candidate",
+      "location": [-175.0, 0.0, 66.0]
+    },
+    {
+      "name": "MARK_aimtarget_candidate",
+      "location": [0.0, 0.0, 0.0]
+    }
+  ]
+}
