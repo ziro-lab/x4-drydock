@@ -1,0 +1,80 @@
+name: DX500 Blender handoff
+on:
+  push:
+    branches: [main, work/dx500-blockout-pilot]
+    paths:
+      - 'tools/dx500_pipeline.py'
+      - 'tools/run_dx500.py'
+      - 'tests/**'
+      - 'ships/dx500_pilot/**'
+      - '.github/workflows/dx500-blender.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dx500-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  blender-handoff:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      BLENDER_VERSION: 5.2.1
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      OMP_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python syntax and pilot tests
+        run: |
+          python3 -m compileall -q tools tests
+          python3 -m unittest discover -s tests -v
+          python3 tools/dx500_pipeline.py check build/preflight
+      - name: Install software-rendering dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb xauth libgl1 libxrender1 libxi6 libxkbcommon0 libsm6 libxxf86vm1 libxfixes3
+      - name: Download and verify official Blender
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          archive="blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+          base="https://download.blender.org/release/Blender5.2"
+          curl --fail --location --retry 3 --max-time 300 "$base/$archive" -o "$archive"
+          curl --fail --location --retry 3 --max-time 60 "$base/blender-${BLENDER_VERSION}.sha256" -o blender.sha256
+          grep " $archive$" blender.sha256 > selected.sha256
+          test "$(wc -l < selected.sha256)" -eq 1
+          sha256sum --check selected.sha256
+          tar -xf "$archive"
+          echo "BLENDER_BIN=$RUNNER_TEMP/blender-${BLENDER_VERSION}-linux-x64/blender" >> "$GITHUB_ENV"
+      - name: Build fresh native files, reopen, inspect, and render
+        run: |
+          xvfb-run -a python3 tools/run_dx500.py --blender "$BLENDER_BIN" --output build/dx500
+      - name: Verify packet and publish job summary
+        run: |
+          cd build/dx500
+          sha256sum --check SHA256SUMS.txt
+          {
+            echo '## DX500 Blender-only handoff'
+            echo 'This artifact is NOT an installable X4 MOD.'
+            echo '```json'
+            cat build_identity.json blender_validation.json geometry_validation.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload validated handoff
+        uses: actions/upload-artifact@v4
+        with:
+          name: dx500-blender-handoff-${{ github.sha }}
+          path: build/dx500/
+          if-no-files-found: error
+          retention-days: 60
+      - name: Upload diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dx500-failed-diagnostics-${{ github.run_id }}
+          path: |
+            build/**/*.log
+            build/**/*.json
+          if-no-files-found: ignore
+          retention-days: 14
